@@ -105,45 +105,7 @@ Acts as the write endpoint for the iOS app — receives snapshot uploads, merges
 
 ## 🗄️ Database Schema
 
-```mermaid
-erDiagram
-  ZWORKSPACE ||--o{ ZNOTEBOOK : contains
-  ZNOTEBOOK ||--o{ ZPAGE : contains
-  ZPAGE ||--o{ ZNOTETEXT : has
-  ZPAGE ||--o{ ZNOTEIMAGE : has
-  ZPAGE ||--o{ ZAUDIOOBJECT : has
-  ZPAGE ||--o{ ZSHAPEOBJECT : has
-  ZPAGE ||--o{ ZTABLEOBJECT : has
-  ZPAGE ||--o{ ZBROWSEROBJECT : has
-  ZPAGE ||--o{ ZAICHATSESSION : has
-  ZAICHATSESSION ||--o{ ZAICHATMESSAGE : contains
-
-  ZWORKSPACE {
-    int Z_PK "Primary key"
-    string ZNAME "Workspace name"
-    string ZACCENTCOLOR "UI accent color"
-    string ZSERVERID "Server sync ID"
-    string ZSYNCSTATUS "Sync state"
-    date ZCREATIONDATE "Created timestamp"
-    date ZUPDATEDAT "Updated timestamp"
-  }
-
-  ZPAGE {
-    int Z_PK "Primary key"
-    string ZTITLE "Page title"
-    string ZCONTENT "Text content"
-    blob ZDRAWINGDATA "PencilKit canvas data"
-    string ZOCRTEXT "OCR recognized text"
-    string ZBACKGROUNDCOLORHEX "Canvas background"
-  }
-
-  ZAICHATMESSAGE {
-    int Z_PK "Primary key"
-    string ZROLE "user / assistant"
-    string ZCONTENT "Message body"
-    date ZTIMESTAMP "Sent time"
-  }
-```
+<img src="diagram-2026-05-26.png" alt="Notes.ai Database ERD" width="100%"/>
 
 ### Database Files
 
