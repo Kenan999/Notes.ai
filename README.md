@@ -190,24 +190,22 @@ sequenceDiagram
 
 ```bash
 # Start Flask API
-python3 backend/app.py     # → IP_REDACTED:8005
+python3 backend/app.py     # → :8005
 
 # Start Relay Server
-python3 backend/relay.py   # → IP_REDACTED:8008
+python3 backend/relay.py   # → :8008
 
 # Database utilities
 python3 backend/db/init_users_db.py
 python3 backend/db/add_user.py <email> <password>
 ```
 
-### Network Configuration
+### Server Ports
 
-| Interface | Address |
-|-----------|---------|
-| Tailscale IP | `IP_REDACTED` |
-| Local LAN | `IP_REDACTED` |
-| Flask Port | `8005` |
-| Relay Port | `8008` |
+| Service | Port |
+|---------|------|
+| Flask API | `8005` |
+| Relay Server | `8008` |
 
 ---
 
