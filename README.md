@@ -32,7 +32,7 @@ C4Container
     Container(flask, "Flask API", "Python / Flask", "Read-only REST API")
     Container(relay, "Relay Server", "Python / http.server", "Sync relay + auth")
     ContainerDb(snapshot, "Snapshot Store", "SQLite", "iPad snapshot (.store) read-only")
-    ContainerDb(main_db, "Main Database", "SQLite", "kali_notes.db — 12 tables")
+    ContainerDb(main_db, "Main Database", "SQLite", "Notes_ai.db — 12 tables")
     Container(scripts, "DB Scripts", "Python", "init, add_user, migrate")
   }
 
@@ -53,7 +53,7 @@ C4Container
 |-----------|-------|
 | **Framework** | Flask (Python) |
 | **Mode** | Read-only data access |
-| **Database Access** | Snapshot `.store` (read-only `:mode=ro`) + `kali_notes.db` (users) |
+| **Database Access** | Snapshot `.store` (read-only `:mode=ro`) + `Notes_ai.db` (users) |
 
 Serves as the data gateway for the web frontend and iOS app. All write operations are handled indirectly through the snapshot sync pipeline.
 
@@ -63,7 +63,7 @@ Serves as the data gateway for the web frontend and iOS app. All write operation
 |-----------|-------|
 | **Framework** | `http.server.BaseHTTPRequestHandler` |
 | **Mode** | Read-write, sync ingestion |
-| **Database Access** | `kali_notes.db` (full read/write) |
+| **Database Access** | `Notes_ai.db` (full read/write) |
 
 Acts as the write endpoint for the iOS app — receives snapshot uploads, merges data into the main database, and handles authentication.
 
@@ -146,7 +146,7 @@ erDiagram
 
 | File | Path | Purpose |
 |------|------|---------|
-| `kali_notes.db` | `backend/db/` | **Primary database** — 12 tables, all production data |
+| `Notes_ai.db` | `backend/db/` | **Primary database** — 12 tables, all production data |
 | `iPad_snapshot.store` | `Sharing/` | Latest iOS snapshot (read-only for Flask API) |
 
 ### Utility Scripts
@@ -166,7 +166,7 @@ sequenceDiagram
     participant iPad as iOS App
     participant Relay as Relay Server
     participant Flask as Flask API
-    participant DB as kali_notes.db
+    participant DB as Notes_ai.db
 
     Note over iPad,DB: Write Path — Snapshot Sync
     iPad->>Relay: POST /upload (.store + .wal + .shm)

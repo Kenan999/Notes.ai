@@ -25,7 +25,7 @@ Routes:
 
 Interactions:
     - Reads snapshot SQLite store for note data.
-    - Reads kali_notes.db for user authentication.
+    - Reads Notes_ai.db for user authentication.
     - Proxied by Vite frontend dev server for cross-origin requests.
 
 ---
@@ -35,7 +35,7 @@ Interactions:
 Responsibilities:
     - Receive iPad SQLite snapshot uploads via POST.
     - Auto-merge SQLite WAL + SHM files on receipt.
-    - Merge snapshot tables into the main kali_notes.db.
+    - Merge snapshot tables into the main Notes_ai.db.
     - Serve cloud workspace listing, download, and delete endpoints.
     - Handle user registration and login authentication.
 
@@ -54,8 +54,8 @@ Endpoints:
 
 Interactions:
     - Receives snapshot files from iOS SyncManager.
-    - Merges snapshot data into kali_notes.db with server_user_id tagging.
-    - Shares the same kali_notes.db file with the Flask API server.
+    - Merges snapshot data into Notes_ai.db with server_user_id tagging.
+    - Shares the same Notes_ai.db file with the Flask API server.
 
 ---
 
@@ -101,7 +101,7 @@ Scripts:
     - migrate_db.py: migrate() — ALTER TABLE to add columns
 
 Interactions:
-    - Operate directly on kali_notes.db.
+    - Operate directly on Notes_ai.db.
     - Called manually or during setup.
 
 ---
@@ -119,7 +119,7 @@ C4Container
     Container(flask, "Flask API", "Python / Flask", "Read-only REST")
     Container(relay, "Relay Server", "Python / http.server", "Sync & auth")
     ContainerDb(snapshot, "Snapshot Store", "SQLite", "iPad snapshot (.store)")
-    ContainerDb(main_db, "Main Database", "SQLite", "kali_notes.db — 12 tables")
+    ContainerDb(main_db, "Main Database", "SQLite", "Notes_ai.db — 12 tables")
     Container(scripts, "DB Scripts", "Python", "init, add_user, migrate")
 
     Rel(flask, snapshot, "→", "Read-only (:mode=ro)")
