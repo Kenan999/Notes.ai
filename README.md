@@ -9,6 +9,20 @@
 
 ---
 
+## 💡 Projekt Idee
+
+| | **OpenAI - gpt-4o-mini** | **Google - gemini-1.5-flash** | Notes |
+|---|---|---|---|
+| Prompt Technique #1 - Rewrite User Prompt | | | |
+| Prompt #1 | | | |
+| Output tokens | | | |
+| Prompt Technique #2 - Generate Character | | | |
+| Prompt #2 | | | |
+| Output tokens | | | |
+| **Pricing** | | | |
+
+---
+
 ## 📋 Table of Contents
 
 - [Architecture Overview](#-architecture-overview)
