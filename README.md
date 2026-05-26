@@ -179,7 +179,7 @@ Eight singleton services encapsulate all business logic:
 graph LR
   A[SyncManager] -->|exportLiveStoreToSnapshots| B[(SwiftData Store)]
   A -->|uploadFileSilently| C[Relay Server :8008]
-  A -->|probeServer| D{Tailscale? Home IP?}
+  A -->|probeServer| D{Server Reachable?}
   A -->|importFromCloud| C
 ```
 
