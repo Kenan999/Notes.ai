@@ -2,18 +2,56 @@
 
 ## Overview
 
-This document describes how the database schema stays synchronized between three locations:
+Fully automated pipeline: **SQLite DB → `db.dbml` → dbdiagram.io (visual ERD)**.
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│  SQLite DB    │ ──► │  db.dbml     │ ──► │ dbdiagram.io │
-│  (live)       │     │  (GitHub)    │     │  (visual)    │
-└──────────────┘     └──────────────┘     └──────────────┘
+┌──────────────┐     ┌──────────────┐     ┌─────────────────────┐
+│  SQLite DB    │ ──► │  db.dbml     │ ──► │ dbdiagram.io API    │
+│  (live)       │     │  (GitHub)    │     │  (auto on push)     │
+└──────────────┘     └──────────────┘     └─────────────────────┘
+       ▲                      │                      │
+       │                      ▼                      ▼
+   Developer              Git commit             Always synced
+   changes schema      + GitHub push            visual ERD
 ```
 
 ---
 
-## Flow
+## Setup (One-Time)
+
+### 1. Get a dbdiagram.io API token
+
+1. Sign up for a [dbdiagram.io](https://dbdiagram.io) account (API requires a paid plan)
+2. Go to **Settings → API Tokens** and generate a token
+3. Copy the token
+
+### 2. Find your diagram ID
+
+1. Open your diagram in dbdiagram.io
+2. The URL looks like: `https://dbdiagram.io/d/YourDiagramName-664d69b5f994a43a6264b553`
+3. The last segment (`664d69b5f994a43a6264b553`) is your diagram ID
+
+### 3. Configure secrets
+
+**For GitHub Actions (auto-sync on push):**
+
+Add secrets to your repo: **Settings → Secrets and variables → Actions**
+
+| Secret | Value |
+|--------|-------|
+| `DBDIAGRAM_API_TOKEN` | Your API token |
+| `DBDIAGRAM_DIAGRAM_ID` | Your diagram ID (e.g. `664d69b5f994a43a6264b553`) |
+
+**For local use:**
+
+```bash
+export DBDIAGRAM_API_TOKEN="your-token"
+export DBDIAGRAM_DIAGRAM_ID="your-diagram-id"
+```
+
+---
+
+## Flow (Automatic)
 
 ```
 Developer changes schema
@@ -23,16 +61,22 @@ SQLite database updated (kali_notes.db)
         │
         ├── (manual) npm run dbml:generate
         │         or
-        ├── (auto)   pre-commit hook (on git commit)
+        ├── (auto)   .githooks/pre-commit (on git commit)
         │
         ▼
 db.dbml regenerated with current schema
         │
         ▼
-Commit + Push to GitHub
+git push origin main
         │
         ▼
-Copy db.dbml contents → dbdiagram.io → visual ERD updated
+GitHub Actions (sync-dbdiagram.yml)
+        │
+        ├── Regenerates db.dbml (double-check)
+        ├── Pushes content to dbdiagram.io API
+        │
+        ▼
+dbdiagram.io visual ERD updated  ← always up to date
 ```
 
 ---
@@ -42,6 +86,7 @@ Copy db.dbml contents → dbdiagram.io → visual ERD updated
 - Python 3.12+
 - Node.js (for npm scripts — optional, Python works directly)
 - VS Code with **Noise DBML** or **dbdiagram** extension
+- dbdiagram.io account (paid plan for API access)
 
 ---
 
@@ -57,11 +102,21 @@ npm run dbml:generate
 python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml
 ```
 
-### Generate from a custom database path
+### Push to dbdiagram.io (manual one-shot)
 
 ```bash
-python3 scripts/sqlite2dbml.py /path/to/custom.db -o db.dbml
+npm run dbml:push
 ```
+
+Requires environment variables `DBDIAGRAM_API_TOKEN` and `DBDIAGRAM_DIAGRAM_ID`.
+
+### Pull latest database from source repo
+
+```bash
+npm run dbml:pull
+```
+
+Fetches `kali_notes.db` from `kali0/backend`.
 
 ### Validate database connectivity
 
@@ -95,15 +150,20 @@ git config core.hooksPath .githooks
 
 ---
 
-## Syncing with dbdiagram.io
+## Manual Sync (No API)
+
+If you don't have a paid dbdiagram.io plan, you can still sync manually:
+
+### Option A: Copy/paste
 
 1. Open [dbdiagram.io](https://dbdiagram.io) in your browser
 2. Sign in to your account
 3. Open your project diagram
-4. Replace the entire content of the code panel with the contents of `db.dbml`
+4. Replace the entire content of the code panel with `db.dbml`
 5. The visual ERD updates instantly
 
-For a faster workflow using the **VS Code dbdiagram extension**:
+### Option B: VS Code extension
+
 1. Install `dbdiagram` extension from the marketplace
 2. Open `db.dbml`
 3. Log in: `Cmd+Shift+P` → `Login with dbdiagram`
@@ -128,7 +188,45 @@ For a faster workflow using the **VS Code dbdiagram extension**:
 
 ## CI/CD Integration
 
-### GitHub Actions (recommended)
+### GitHub Actions — Auto-sync dbdiagram.io
+
+```yaml
+# .github/workflows/sync-dbdiagram.yml
+name: Sync dbdiagram.io
+on:
+  push:
+    branches: [main]
+    paths:
+      - "db.dbml"
+      - "scripts/sqlite2dbml.py"
+      - "backend/db/kali_notes.db"
+  workflow_dispatch:
+
+jobs:
+  push-to-dbdiagram:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Push to dbdiagram.io
+        env:
+          DBDIAGRAM_API_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
+          DBDIAGRAM_DIAGRAM_ID: ${{ secrets.DBDIAGRAM_DIAGRAM_ID }}
+        run: |
+          if [ -z "$DBDIAGRAM_API_TOKEN" ] || [ -z "$DBDIAGRAM_DIAGRAM_ID" ]; then
+            echo "⚠️  Skipping — secrets not configured"
+            exit 0
+          fi
+          DBML=$(cat db.dbml | jq -Rs .)
+          curl -s -X PUT "https://api.dbdiagram.io/v1/diagrams/${DBDIAGRAM_DIAGRAM_ID}" \
+            -H "Authorization: Bearer ${DBDIAGRAM_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "{\"content\": ${DBML}}"
+```
+
+### GitHub Actions — Schema validation only
 
 ```yaml
 # .github/workflows/schema-check.yml

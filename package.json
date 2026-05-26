@@ -8,7 +8,8 @@
     "dbml:generate:custom": "python3 scripts/sqlite2dbml.py",
     "dbml:validate": "python3 -c \"import sqlite3; conn=sqlite3.connect('backend/db/kali_notes.db'); tables=[r[0] for r in conn.execute(\\\"SELECT name FROM sqlite_master WHERE type='table'\\\").fetchall()]; print(f'Connected: {len(tables)} tables found')\"",
     "dbml:watch": "fswatch -o backend/db/kali_notes.db | xargs -n1 -I{} python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml",
-    "dbml:pull": "git fetch kali0 backend && git show kali0/backend:backend/db/kali_notes.db > backend/db/kali_notes.db && echo '✅ Pulled from kali0/backend'"
+    "dbml:pull": "git fetch kali0 backend && git show kali0/backend:backend/db/kali_notes.db > backend/db/kali_notes.db && echo '✅ Pulled from kali0/backend'",
+    "dbml:push": "python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml && curl -s -X PUT \"https://api.dbdiagram.io/v1/diagrams/${DBDIAGRAM_DIAGRAM_ID:?Set env DBDIAGRAM_DIAGRAM_ID}\" -H \"Authorization: Bearer ${DBDIAGRAM_API_TOKEN:?Set env DBDIAGRAM_API_TOKEN}\" -H \"Content-Type: application/json\" -d \"{\\\"content\\\": $(cat db.dbml | python3 -c 'import sys,json; print(json.dumps(sys.stdin.read()))')}\" | python3 -m json.tool"
   },
   "devDependencies": {}
 }
