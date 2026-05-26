@@ -155,7 +155,7 @@ INDEX_HTML_CONFIG = {
     "entry": "/src/main.jsx",
     "bundler": {
         "name": "Vite 5",
-        "proxy": {"/api": "http://localhost:8005"},
+        "proxy": {"/api": ""},
         "plugins": ["@vitejs/plugin-react"],
     },
     "package": {

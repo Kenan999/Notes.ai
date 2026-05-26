@@ -2,7 +2,6 @@
   <img src="https://img.shields.io/badge/python-3.12%2B-blue" alt="Python">
   <img src="https://img.shields.io/badge/framework-Flask-red" alt="Flask">
   <img src="https://img.shields.io/badge/database-SQLite-orange" alt="SQLite">
-  <img src="https://img.shields.io/badge/port-8005%20%7C%208008-brightgreen" alt="Ports">
   <br/><br/>
   <h1>⚙️ Notes.ai — Backend</h1>
   <p><strong>Two-server Python architecture · Snapshot sync relay · Read-only data API</strong></p>
@@ -30,8 +29,8 @@ C4Container
   title Backend Architecture — Notes.ai
 
   System_Boundary(backend, "Backend") {
-    Container(flask, "Flask API", "Python / Flask", "Read-only REST API on port 8005")
-    Container(relay, "Relay Server", "Python / http.server", "Sync relay + auth on port 8008")
+    Container(flask, "Flask API", "Python / Flask", "Read-only REST API")
+    Container(relay, "Relay Server", "Python / http.server", "Sync relay + auth")
     ContainerDb(snapshot, "Snapshot Store", "SQLite", "iPad snapshot (.store) read-only")
     ContainerDb(main_db, "Main Database", "SQLite", "kali_notes.db — 12 tables")
     Container(scripts, "DB Scripts", "Python", "init, add_user, migrate")
@@ -52,7 +51,6 @@ C4Container
 
 | Attribute | Value |
 |-----------|-------|
-| **Port** | `8005` |
 | **Framework** | Flask (Python) |
 | **Mode** | Read-only data access |
 | **Database Access** | Snapshot `.store` (read-only `:mode=ro`) + `kali_notes.db` (users) |
@@ -63,7 +61,6 @@ Serves as the data gateway for the web frontend and iOS app. All write operation
 
 | Attribute | Value |
 |-----------|-------|
-| **Port** | `8008` |
 | **Framework** | `http.server.BaseHTTPRequestHandler` |
 | **Mode** | Read-write, sync ingestion |
 | **Database Access** | `kali_notes.db` (full read/write) |
@@ -190,22 +187,15 @@ sequenceDiagram
 
 ```bash
 # Start Flask API
-python3 backend/app.py     # → :8005
+python3 backend/app.py
 
 # Start Relay Server
-python3 backend/relay.py   # → :8008
+python3 backend/relay.py
 
 # Database utilities
 python3 backend/db/init_users_db.py
 python3 backend/db/add_user.py <email> <password>
 ```
-
-### Server Ports
-
-| Service | Port |
-|---------|------|
-| Flask API | `8005` |
-| Relay Server | `8008` |
 
 ---
 

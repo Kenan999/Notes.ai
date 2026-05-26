@@ -115,7 +115,7 @@ DATA_FLOW_DIAGRAM = """
 │                          Backend                                     │
 │                                                                      │
 │  ┌──────────────────────┐     ┌──────────────────────────────┐      │
-│  │ FlaskAPI (port 8005)  │     │ RelayServer (port 8008)      │      │
+│  │ FlaskAPI               │     │ RelayServer                   │      │
 │  │ Read-only GET enpoints│     │ Upload + merge + auth        │      │
 │  │ iPad_snapshot.store   │     │ merge_snapshot_into_main_db()│      │
 │  └──────────┬───────────┘     └──────────────┬───────────────┘      │
@@ -129,7 +129,7 @@ DATA_FLOW_DIAGRAM = """
 │              └─────────────────────┘                                 │
 └──────────────────────┬───────────────────────────────────────────────┘
                        │
-          Vite proxy /api/* → localhost:8005
+           Vite proxy /api/*
                        ▼
 ┌──────────────────────────────────────────────────────────────────────┐
 │                      Web Frontend                                    │
