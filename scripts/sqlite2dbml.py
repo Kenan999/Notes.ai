@@ -16,21 +16,17 @@ Handles:
 import argparse
 import os
 import sqlite3
-import sys
-from pathlib import Path
+import os
+import argparse
+from collections import defaultdict, deque
 
 
-def map_type(sqlite_type: str) -> str:
-    """Map SQLite type to DBML-compatible type."""
-    if not sqlite_type:
-        return "VARCHAR"
-    t = sqlite_type.upper()
+def map_type(t: str) -> str:
+    t = t.upper().strip()
     if "INT" in t:
         return "INTEGER"
-    if "FLOAT" in t or "DOUBLE" in t or "REAL" in t:
-        return "FLOAT"
-    if "BLOB" in t:
-        return "BLOB"
+    if "REAL" in t or "FLOAT" in t or "DOUBLE" in t or "NUMERIC" in t or "DECIMAL" in t:
+        return "DECIMAL"
     if "TIMESTAMP" in t or "DATETIME" in t or "DATE" in t:
         return "TIMESTAMP"
     if "BOOL" in t:
@@ -46,7 +42,47 @@ def get_tables(conn) -> list[str]:
         "WHERE type='table' AND name NOT LIKE 'sqlite_%' "
         "ORDER BY name"
     )
-    return [r[0] for r in cursor.fetchall()]
+    tables = [r[0] for r in cursor.fetchall()]
+    return _topological_sort(conn, tables)
+
+
+INFERRED_FKS = {
+    "ZPAGE": "ZWORKSPACE",
+    "ZNOTEBOOK": "ZWORKSPACE",
+    "ZNOTETEXT": "ZPAGE",
+    "ZNOTEIMAGE": "ZPAGE",
+    "ZAUDIOOBJECT": "ZPAGE",
+    "ZSHAPEOBJECT": "ZPAGE",
+    "ZTABLEOBJECT": "ZPAGE",
+    "ZBROWSEROBJECT": "ZPAGE",
+    "ZAICHATMESSAGE": "ZAICHATSESSION",
+}
+
+
+def _topological_sort(conn, tables: list[str]) -> list[str]:
+    table_set = set(tables)
+    adj = defaultdict(list)
+    indeg = {t: 0 for t in tables}
+
+    for child, parent in INFERRED_FKS.items():
+        if child in table_set and parent in table_set:
+            adj[parent].append(child)
+            indeg[child] = indeg.get(child, 0) + 1
+
+    q = deque([t for t in tables if indeg.get(t, 0) == 0])
+    result = []
+    while q:
+        t = q.popleft()
+        result.append(t)
+        for nb in adj.get(t, []):
+            indeg[nb] -= 1
+            if indeg[nb] == 0:
+                q.append(nb)
+
+    for t in tables:
+        if t not in result:
+            result.append(t)
+    return result
 
 
 def get_columns(conn, table: str) -> list[dict]:
