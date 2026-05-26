@@ -9,18 +9,6 @@
 
 ---
 
-## 💡 Projekt Idee
-
-| | **OpenAI - gpt-4o-mini** | **Google - gemini-1.5-flash** | Notes |
-|---|---|---|---|
-| Prompt Technique #1 - Rewrite User Prompt | | | |
-| Prompt #1 | | | |
-| Output tokens | | | |
-| Prompt Technique #2 - Generate Character | | | |
-| Prompt #2 | | | |
-| Output tokens | | | |
-| **Pricing** | | | |
-
 ---
 
 ## 📋 Table of Contents
@@ -45,7 +33,7 @@ C4Container
   System_Boundary(backend, "Backend") {
     Container(flask, "Flask API", "Python / Flask", "Read-only REST API")
     Container(relay, "Relay Server", "Python / http.server", "Sync relay + auth")
-    ContainerDb(snapshot, "Snapshot Store", "SQLite", "iPad snapshot (.store) read-only")
+    ContainerDb(snapshot, "Snapshot Store", "SQLite", "iOS device snapshot (.store) read-only")
     ContainerDb(main_db, "Main Database", "SQLite", "kali_notes.db — 12 tables")
     Container(scripts, "DB Scripts", "Python", "init, add_user, migrate")
   }
@@ -123,7 +111,7 @@ Acts as the write endpoint for the iOS app — receives snapshot uploads, merges
 | File | Path | Purpose |
 |------|------|---------|
 | `kali_notes.db` | `backend/db/` | **Primary database** — 12 tables, all production data |
-| `iPad_snapshot.store` | `Sharing/` | Latest iOS snapshot (read-only for Flask API) |
+| `iPad_snapshot.store` | `Sharing/` | Latest iOS device snapshot (read-only for Flask API) |
 
 ### Utility Scripts
 
@@ -139,19 +127,19 @@ Acts as the write endpoint for the iOS app — receives snapshot uploads, merges
 
 ```mermaid
 sequenceDiagram
-    participant iPad as iOS App
+    participant Device as iOS Device
     participant Relay as Relay Server
     participant Flask as Flask API
     participant DB as kali_notes.db
 
-    Note over iPad,DB: Write Path — Snapshot Sync
-    iPad->>Relay: POST /upload (.store + .wal + .shm)
+    Note over Device,DB: Write Path — Snapshot Sync
+    Device->>Relay: POST /upload (.store + .wal + .shm)
     Relay->>Relay: Auto-merge WAL files
     Relay->>DB: merge_snapshot_into_main_db()
     DB->>DB: CREATE IF NOT EXISTS + DELETE + INSERT
-    Relay-->>iPad: 200 OK
+    Relay-->>Device: 200 OK
 
-    Note over iPad,DB: Read Path — Data Access
+    Note over Device,DB: Read Path — Data Access
     Flask->>DB: SELECT * FROM ZWORKSPACE
     DB-->>Flask: rows
     Flask-->>Client: JSON response
