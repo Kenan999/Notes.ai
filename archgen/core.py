@@ -53,7 +53,7 @@ platform with offline-first iOS at the center:
 │                                                            │
 │   ┌─────────────────┐      ┌──────────────────────┐        │
 │   │  Flask API       │      │  Relay Server         │       │
-│   │  (port 8005)     │      │  (port 8008)          │       │
+  │   │                  │      │                       │       │
 │   │  Read-only data  │      │  Snapshot ingest      │       │
 │   │  GET endpoints   │      │  Auth endpoints       │       │
 │   └────────┬────────┘      └───────────┬──────────┘        │
@@ -65,7 +65,7 @@ platform with offline-first iOS at the center:
 │              └──────────────────┘                          │
 └──────────────┼─────────────────────────────────────────────┘
                │
-               │ Vite proxy /api/* → localhost:8005
+               │ Vite proxy /api/*
                ▼
 ┌────────────────────────────────────────────────────────────┐
 │                   Web Frontend                              │
@@ -93,7 +93,7 @@ class DeploymentBoundaries:
         "backend": {
             "deployment": "Python scripts on private server",
             "language": "Python 3.x",
-            "servers": ["Flask API (port 8005)", "Relay Server (port 8008)"],
+            "servers": ["Flask API", "Relay Server"],
             "database": "SQLite (kali_notes.db) — 12 tables",
             "protocols": ["HTTP REST", "SQLite direct access"],
         },

@@ -178,7 +178,7 @@ Eight singleton services encapsulate all business logic:
 ```mermaid
 graph LR
   A[SyncManager] -->|exportLiveStoreToSnapshots| B[(SwiftData Store)]
-  A -->|uploadFileSilently| C[Relay Server :8008]
+  A -->|uploadFileSilently| C[Relay Server]
   A -->|probeServer| D{Server Reachable?}
   A -->|importFromCloud| C
 ```
