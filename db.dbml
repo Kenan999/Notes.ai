@@ -29,7 +29,7 @@ Table "ZWORKSPACE" {
 Table "users" {
   "id" INTEGER [pk]
   "email" VARCHAR [not null, unique]
-  "created_at" TIMESTAMP [default: CURRENT_TIMESTAMP]
+  "created_at" TIMESTAMP [default: `CURRENT_TIMESTAMP`]
   "password" VARCHAR
 }
 

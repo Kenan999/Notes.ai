@@ -12,6 +12,7 @@
     "dbml:push": "python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml && cat db.dbml | jq -Rs '{name: \"Notes.ai Schema\", content: .}' | curl -s -X PUT \"https://api.dbdiagram.io/v1/diagrams/${DBDIAGRAM_DIAGRAM_ID:?Set env DBDIAGRAM_DIAGRAM_ID}\" -H \"dbdiagram-access-token: ${DBDIAGRAM_API_TOKEN:?Set env DBDIAGRAM_API_TOKEN}\" -H \"Content-Type: application/json\" -d @- | jq ."
   },
   "devDependencies": {
+    "@dbml/cli": "^8.2.1",
     "@dbml/core": "^8.2.1"
   }
 }

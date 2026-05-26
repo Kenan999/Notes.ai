@@ -136,7 +136,7 @@ def generate_dbml(db_path: str, output_path: str | None = None) -> str:
             if t == "users" and c["name"] == "email":
                 settings.append("unique")
             if c["default"] is not None:
-                settings.append(f"default: {c['default']}")
+                settings.append(f"default: `{c['default']}`")
             field = f'  "{c["name"]}" {c["type"]}'
             if settings:
                 field += f' [{", ".join(settings)}]'
