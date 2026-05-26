@@ -5,7 +5,7 @@ on:
     paths:
       - "db.dbml"
       - "scripts/sqlite2dbml.py"
-      - "backend/db/kali_notes.db"
+      - "backend/db/Notes_ai.db"
   workflow_dispatch:
 
 jobs:

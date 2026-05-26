@@ -1,4 +1,4 @@
-// Notes.ai Schema (auto-generated from kali_notes.db)
+// Notes.ai Schema (auto-generated from Notes_ai.db)
 
 Table "ZAICHATSESSION" {
   "Z_PK" INTEGER [pk]
