@@ -1,0 +1,22 @@
+#!/bin/bash
+# Pre-commit hook: auto-regenerate db.dbml if the database changed.
+# Install: git config core.hooksPath .githooks
+
+set -e
+
+DB="backend/db/kali_notes.db"
+DBML="db.dbml"
+
+if [ ! -f "$DB" ]; then
+  exit 0
+fi
+
+# Only run if the database file is staged
+if ! git diff --cached --name-only | grep -q "$DB"; then
+  exit 0
+fi
+
+echo "🔁 Database change detected — regenerating $DBML..."
+python3 scripts/sqlite2dbml.py "$DB" -o "$DBML"
+git add "$DBML"
+echo "✅ $DBML updated and staged"

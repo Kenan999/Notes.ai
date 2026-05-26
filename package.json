@@ -1,0 +1,13 @@
+{
+  "name": "notes-ai",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Notes.ai — Database schema synchronization workflow",
+  "scripts": {
+    "dbml:generate": "python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml",
+    "dbml:generate:custom": "python3 scripts/sqlite2dbml.py",
+    "dbml:validate": "python3 -c \"import sqlite3; conn=sqlite3.connect('backend/db/kali_notes.db'); tables=[r[0] for r in conn.execute(\\\"SELECT name FROM sqlite_master WHERE type='table'\\\").fetchall()]; print(f'Connected: {len(tables)} tables found')\"",
+    "dbml:watch": "echo 'Run: python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml' && fswatch -o backend/db/kali_notes.db | xargs -n1 -I{} python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml"
+  },
+  "devDependencies": {}
+}
