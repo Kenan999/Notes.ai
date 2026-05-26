@@ -21,7 +21,7 @@ C4Context
   Person(web_user, "Web User", "Read-only browser access")
 
   System(ios, "iOS App", "Swift/SwiftUI + SwiftData + PencilKit")
-  System(backend, "Backend", "Flask API (8005) + Relay (8008)")
+  System(backend, "Backend", "Flask API + Relay")
   System(frontend, "Web Frontend", "React 18 + Vite")
   System_Ext(ai_providers, "AI Providers", "OpenAI, Anthropic, Gemini, Groq, ...")
   Rel(ios_user, ios, "Draw, type, record")
@@ -59,7 +59,7 @@ C4Container
   }
 
   System_Ext(ai_providers, "AI Providers", "OpenAI, Anthropic, ...")
-  System_Ext(relay, "Relay Server", "Backend port 8008")
+  System_Ext(relay, "Relay Server", "Backend")
 ```
 
 """
@@ -76,8 +76,8 @@ C4Container
   title Backend Containers — Notes.ai
 
   System_Boundary(backend, "Backend") {
-    Container(flask, "Flask API", "Python / Flask", "Read-only REST (port 8005)")
-    Container(relay, "Relay Server", "Python / http.server", "Sync & auth (port 8008)")
+    Container(flask, "Flask API", "Python / Flask", "Read-only REST")
+    Container(relay, "Relay Server", "Python / http.server", "Sync & auth")
     ContainerDb(snapshot, "Snapshot Store", "SQLite", "iPad snapshot (.store)")
     ContainerDb(main_db, "Main Database", "SQLite", "kali_notes.db — 12 tables")
     Container(scripts, "DB Scripts", "Python", "init, add_user, migrate")
@@ -120,7 +120,7 @@ C4Container
     Container(settings, "SettingsPanel", "React", "App configuration")
   }
 
-  System_Ext(flask, "Flask API", "Backend port 8005")
+  System_Ext(flask, "Flask API", "Backend")
 
   Rel(shell, lock, "→", "Gates access")
   Rel(shell, sidebar, "→", "Passes state")
@@ -180,7 +180,7 @@ def deployment_diagram() -> str:
 graph TB
   subgraph "Home Network"
     subgraph "Server Network"
-      FS1["Backend Server<br/>FlaskAPI :8005<br/>RelayServer :8008<br/>kali_notes.db"]
+      FS1["Backend Server<br/>FlaskAPI<br/>RelayServer<br/>kali_notes.db"]
     end
   end
 
@@ -189,7 +189,7 @@ graph TB
   end
 
   subgraph "Development Machine"
-    FE["Vite Dev Server<br/>Proxy /api → :8005<br/>React 18 SPA"]
+    FE["Vite Dev Server<br/>Proxy /api<br/>React 18 SPA"]
   end
 
   IOS -- "Snapshot upload" --> FS1

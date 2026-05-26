@@ -159,7 +159,7 @@ C4Container
     Container(settings, "SettingsPanel", "React", "App configuration")
   }
 
-  System_Ext(flask, "Flask API", "Backend port 8005")
+  System_Ext(flask, "Flask API", "Backend")
 
   Rel(shell, lock, "→", "Gates access")
   Rel(shell, sidebar, "→", "Passes state")

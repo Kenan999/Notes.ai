@@ -41,7 +41,7 @@ C4Container
     Container(settings, "SettingsPanel", "React", "App configuration")
   }
 
-  System_Ext(flask, "Flask API", "Backend :8005")
+  System_Ext(flask, "Flask API", "Backend")
 
   Rel(shell, lock, "Authentication gate")
   Rel(shell, sidebar, "Passes workspace state")
@@ -146,7 +146,7 @@ sequenceDiagram
 
     Note over C,F: Page Load Sequence
     C->>V: fetch /api/workspaces
-    V->>F: Proxy to localhost:8005
+    V->>F: Proxy
     F-->>V: JSON [{id, name}, ...]
     V-->>C: Response
 
@@ -170,7 +170,7 @@ sequenceDiagram
 ```js
 // vite.config.js
 {
-  proxy: { "/api": "http://localhost:8005" },
+  proxy: { "/api": "" },
   plugins: ["@vitejs/plugin-react"],
 }
 ```
