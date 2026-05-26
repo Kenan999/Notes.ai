@@ -27,7 +27,7 @@ class FlaskAPI:
 
     Interactions:
         - Reads snapshot SQLite store for note data.
-        - Reads Notes_ai.db for user authentication.
+        - Reads kali_notes.db for user authentication.
         - Proxied by Vite frontend dev server for cross-origin requests.
     """
 
@@ -38,7 +38,7 @@ class RelayServer:
     Responsibilities:
         - Receive iPad SQLite snapshot uploads via POST.
         - Auto-merge SQLite WAL + SHM files on receipt.
-        - Merge snapshot tables into the main Notes_ai.db.
+        - Merge snapshot tables into the main kali_notes.db.
         - Serve cloud workspace listing, download, and delete endpoints.
         - Handle user registration and login authentication.
 
@@ -57,8 +57,8 @@ class RelayServer:
 
     Interactions:
         - Receives snapshot files from iOS SyncManager.
-        - Merges snapshot data into Notes_ai.db with server_user_id tagging.
-        - Shares the same Notes_ai.db file with the Flask API server.
+        - Merges snapshot data into kali_notes.db with server_user_id tagging.
+        - Shares the same kali_notes.db file with the Flask API server.
     """
 
 
@@ -106,6 +106,6 @@ class DatabaseScripts:
         - migrate_db.py: migrate() — ALTER TABLE to add columns
 
     Interactions:
-        - Operate directly on Notes_ai.db.
+        - Operate directly on kali_notes.db.
         - Called manually or during setup.
     """

@@ -82,7 +82,7 @@ C4Container
     Container(flask, "Flask API", "Python / Flask", "Read-only REST")
     Container(relay, "Relay Server", "Python / http.server", "Sync & auth")
     ContainerDb(snapshot, "Snapshot Store", "SQLite", "iPad snapshot (.store)")
-    ContainerDb(main_db, "Main Database", "SQLite", "Notes_ai.db — 12 tables")
+    ContainerDb(main_db, "Main Database", "SQLite", "kali_notes.db — 12 tables")
     Container(scripts, "DB Scripts", "Python", "init, add_user, migrate")
 
     Rel(flask, snapshot, "→", "Read-only (:mode=ro)")
@@ -152,7 +152,7 @@ sequenceDiagram
     participant SD as SwiftData Store
     participant FS as File System
     participant RS as Relay Server
-    participant DB as Notes_ai.db
+    participant DB as kali_notes.db
 
     Note over iPad: User creates/edits notes
     SM->>SD: Observe changes
@@ -183,7 +183,7 @@ def deployment_diagram() -> str:
 graph TB
   subgraph "Home Network"
     subgraph "Server Network"
-      FS1["Backend Server<br/>FlaskAPI<br/>RelayServer<br/>Notes_ai.db"]
+      FS1["Backend Server<br/>FlaskAPI<br/>RelayServer<br/>kali_notes.db"]
     end
   end
 
