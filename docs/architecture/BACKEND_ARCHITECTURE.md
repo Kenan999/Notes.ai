@@ -5,7 +5,7 @@ _2026-05-26_
 ---
 
 ## Backend Architecture
-### Read-only REST API server (port 8005).
+### Read-only REST API server.
 
 Responsibilities:
     - Serve read-only GET endpoints over note hierarchy data.
@@ -30,7 +30,7 @@ Interactions:
 
 ---
 
-### Sync relay and authentication server (port 8008).
+### Sync relay and authentication server.
 
 Responsibilities:
     - Receive iPad SQLite snapshot uploads via POST.
@@ -116,8 +116,8 @@ C4Container
   title Backend Containers — Notes.ai
 
   System_Boundary(backend, "Backend") {
-    Container(flask, "Flask API", "Python / Flask", "Read-only REST (port 8005)")
-    Container(relay, "Relay Server", "Python / http.server", "Sync & auth (port 8008)")
+    Container(flask, "Flask API", "Python / Flask", "Read-only REST")
+    Container(relay, "Relay Server", "Python / http.server", "Sync & auth")
     ContainerDb(snapshot, "Snapshot Store", "SQLite", "iPad snapshot (.store)")
     ContainerDb(main_db, "Main Database", "SQLite", "kali_notes.db — 12 tables")
     Container(scripts, "DB Scripts", "Python", "init, add_user, migrate")
