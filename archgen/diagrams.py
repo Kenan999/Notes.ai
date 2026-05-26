@@ -24,14 +24,11 @@ C4Context
   System(backend, "Backend", "Flask API (8005) + Relay (8008)")
   System(frontend, "Web Frontend", "React 18 + Vite")
   System_Ext(ai_providers, "AI Providers", "OpenAI, Anthropic, Gemini, Groq, ...")
-  System_Ext(tailscale, "Tailscale", "Mesh VPN overlay")
-
   Rel(ios_user, ios, "Draw, type, record")
   Rel(web_user, frontend, "View notes")
   Rel(ios, backend, "HTTPS", "Snapshot upload + auth")
   Rel(frontend, backend, "HTTPS", "Read API (Vite proxy)")
   Rel(ios, ai_providers, "HTTP", "Direct AI inference")
-  Rel(backend, tailscale, "Overlay", "Mesh networking")
 ```
 
 """
@@ -182,11 +179,8 @@ def deployment_diagram() -> str:
 ```mermaid
 graph TB
   subgraph "Home Network"
-    subgraph "Tailscale Mesh (100.69.224.83)"
+    subgraph "Server Network"
       FS1["Backend Server<br/>FlaskAPI :8005<br/>RelayServer :8008<br/>kali_notes.db"]
-    end
-    subgraph "Home LAN (192.168.0.131)"
-      FS1
     end
   end
 

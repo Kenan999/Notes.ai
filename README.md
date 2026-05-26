@@ -170,7 +170,7 @@ sequenceDiagram
 ```js
 // vite.config.js
 {
-  proxy: { "/api": "http://100.69.224.83:8005" },
+  proxy: { "/api": "http://localhost:8005" },
   plugins: ["@vitejs/plugin-react"],
 }
 ```
@@ -217,7 +217,7 @@ npm run build      # → vite build (outputs to dist/)
 npm run preview    # → vite preview
 ```
 
-The dev server automatically proxies `/api/*` requests to the Flask backend at `http://100.69.224.83:8005`.
+The dev server automatically proxies `/api/*` requests to the Flask backend.
 
 ---
 
