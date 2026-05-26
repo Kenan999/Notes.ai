@@ -1,0 +1,272 @@
+// ═══════════════════════════════════════════════════════════════
+// Notes.ai — Database Schema
+// Database: SQLite (kali_notes.db)
+// Tables: 12
+// ═══════════════════════════════════════════════════════════════
+
+// ─── User Accounts ──────────────────────────────────────────
+
+Table users {
+  id INTEGER [pk, increment]
+  email TEXT [not null, unique]
+  password TEXT [not null]
+  created_at DATETIME [default: `CURRENT_TIMESTAMP`]
+}
+
+// ─── Workspace ──────────────────────────────────────────────
+
+Table ZWORKSPACE {
+  Z_PK INTEGER [pk]
+  ZID TEXT [not null]
+  ZNAME TEXT [not null]
+  ZACCENTCOLOR TEXT
+  ZSERVERID TEXT
+  ZSYNCSTATUS TEXT
+  ZCREATIONDATE DATETIME
+  ZUPDATEDAT DATETIME
+  server_user_id INTEGER
+}
+
+Ref: ZWORKSPACE.server_user_id > users.id
+
+// ─── Notebook ───────────────────────────────────────────────
+
+Table ZNOTEBOOK {
+  Z_PK INTEGER [pk]
+  ZID TEXT [not null]
+  ZNAME TEXT [not null]
+  ZWORKSPACE INTEGER
+  ZCOLORHEX TEXT
+  ZSERVERID TEXT
+  ZSYNCSTATUS TEXT
+  ZCREATIONDATE DATETIME
+  ZUPDATEDAT DATETIME
+  server_user_id INTEGER
+}
+
+Ref: ZNOTEBOOK.ZWORKSPACE > ZWORKSPACE.Z_PK
+Ref: ZNOTEBOOK.server_user_id > users.id
+
+// ─── Page ───────────────────────────────────────────────────
+
+Table ZPAGE {
+  Z_PK INTEGER [pk]
+  ZID TEXT [not null]
+  ZTITLE TEXT
+  ZINDEX INTEGER
+  ZNOTEBOOK INTEGER
+  ZDRAWINGDATA BLOB
+  ZCONTENT TEXT
+  ZOCRTEXT TEXT
+  ZBACKGROUNDCOLORHEX TEXT
+  ZBACKGROUNDSTYLE TEXT
+  ZSERVERID TEXT
+  ZSYNCSTATUS TEXT
+  ZCREATIONDATE DATETIME
+  ZUPDATEDAT DATETIME
+  server_user_id INTEGER
+}
+
+Ref: ZPAGE.ZNOTEBOOK > ZNOTEBOOK.Z_PK
+Ref: ZPAGE.server_user_id > users.id
+
+// ─── Note Text Box ──────────────────────────────────────────
+
+Table ZNOTETEXT {
+  Z_PK INTEGER [pk]
+  ZID TEXT [not null]
+  ZPAGE INTEGER
+  ZTEXT TEXT
+  ZFONTSIZE REAL
+  ZCOLORHEX TEXT
+  ZX REAL
+  ZY REAL
+  ZWIDTH REAL
+  ZHEIGHT REAL
+  ZROTATION REAL
+  ZZINDEX INTEGER
+  ZISLOCKED INTEGER [default: 0]
+  Z_ENT INTEGER
+  Z_OPT INTEGER
+  server_user_id INTEGER
+}
+
+Ref: ZNOTETEXT.ZPAGE > ZPAGE.Z_PK
+Ref: ZNOTETEXT.server_user_id > users.id
+
+// ─── Note Image ─────────────────────────────────────────────
+
+Table ZNOTEIMAGE {
+  Z_PK INTEGER [pk]
+  ZID TEXT [not null]
+  ZPAGE INTEGER
+  ZDATA BLOB
+  ZX REAL
+  ZY REAL
+  ZWIDTH REAL
+  ZHEIGHT REAL
+  ZROTATION REAL
+  ZZINDEX INTEGER
+  ZOPACITY REAL
+  ZISLOCKED INTEGER [default: 0]
+  Z_ENT INTEGER
+  Z_OPT INTEGER
+  server_user_id INTEGER
+}
+
+Ref: ZNOTEIMAGE.ZPAGE > ZPAGE.Z_PK
+Ref: ZNOTEIMAGE.server_user_id > users.id
+
+// ─── Audio Object ───────────────────────────────────────────
+
+Table ZAUDIOOBJECT {
+  Z_PK INTEGER [pk]
+  ZID TEXT [not null]
+  ZPAGE INTEGER
+  ZDATA BLOB
+  ZTRANSCRIPTION TEXT
+  ZDURATION REAL
+  ZSTARTTIME DATETIME
+  ZENDTIME DATETIME
+  ZX REAL
+  ZY REAL
+  ZROTATION REAL
+  ZZINDEX INTEGER
+  ZISLOCKED INTEGER [default: 0]
+  Z_ENT INTEGER
+  Z_OPT INTEGER
+  server_user_id INTEGER
+}
+
+Ref: ZAUDIOOBJECT.ZPAGE > ZPAGE.Z_PK
+Ref: ZAUDIOOBJECT.server_user_id > users.id
+
+// ─── Shape Object ───────────────────────────────────────────
+
+Table ZSHAPEOBJECT {
+  Z_PK INTEGER [pk]
+  ZID TEXT [not null]
+  ZPAGE INTEGER
+  ZTYPE TEXT
+  ZCOLORHEX TEXT
+  ZISFILLED INTEGER [default: 0]
+  ZX REAL
+  ZY REAL
+  ZWIDTH REAL
+  ZHEIGHT REAL
+  ZROTATION REAL
+  ZZINDEX INTEGER
+  Z_ENT INTEGER
+  Z_OPT INTEGER
+  server_user_id INTEGER
+}
+
+Ref: ZSHAPEOBJECT.ZPAGE > ZPAGE.Z_PK
+Ref: ZSHAPEOBJECT.server_user_id > users.id
+
+// ─── Table Object ───────────────────────────────────────────
+
+Table ZTABLEOBJECT {
+  Z_PK INTEGER [pk]
+  ZID TEXT [not null]
+  ZPAGE INTEGER
+  ZROWS INTEGER
+  ZCOLS INTEGER
+  ZCELLCONTENT BLOB
+  ZX REAL
+  ZY REAL
+  ZROTATION REAL
+  ZZINDEX INTEGER
+  Z_ENT INTEGER
+  Z_OPT INTEGER
+  server_user_id INTEGER
+}
+
+Ref: ZTABLEOBJECT.ZPAGE > ZPAGE.Z_PK
+Ref: ZTABLEOBJECT.server_user_id > users.id
+
+// ─── Browser Object ─────────────────────────────────────────
+
+Table ZBROWSEROBJECT {
+  Z_PK INTEGER [pk]
+  ZID TEXT [not null]
+  ZPAGE INTEGER
+  ZTITLE TEXT
+  ZURLSTRING TEXT
+  ZCREATEDAT DATETIME
+  ZX REAL
+  ZY REAL
+  ZWIDTH REAL
+  ZHEIGHT REAL
+  ZROTATION REAL
+  ZZINDEX INTEGER
+  ZOPACITY REAL
+  ZISLOCKED INTEGER [default: 0]
+  Z_ENT INTEGER
+  Z_OPT INTEGER
+  server_user_id INTEGER
+}
+
+Ref: ZBROWSEROBJECT.ZPAGE > ZPAGE.Z_PK
+Ref: ZBROWSEROBJECT.server_user_id > users.id
+
+// ─── AI Chat Session ────────────────────────────────────────
+
+Table ZAICHATSESSION {
+  Z_PK INTEGER [pk]
+  ZID TEXT [not null]
+  ZTITLE TEXT
+  ZCREATIONDATE DATETIME
+  ZUPDATEDAT DATETIME
+  ZISPINNED INTEGER [default: 0]
+  Z_ENT INTEGER
+  Z_OPT INTEGER
+  server_user_id INTEGER
+}
+
+Ref: ZAICHATSESSION.server_user_id > users.id
+
+// ─── AI Chat Message ────────────────────────────────────────
+
+Table ZAICHATMESSAGE {
+  Z_PK INTEGER [pk]
+  ZID TEXT [not null]
+  ZSESSION INTEGER
+  ZROLE TEXT [not null]
+  ZCONTENT TEXT
+  ZTIMESTAMP DATETIME
+  ZIMAGEURL TEXT
+  ZIMAGEDESCRIPTION TEXT
+  Z_ENT INTEGER
+  Z_OPT INTEGER
+  server_user_id INTEGER
+}
+
+Ref: ZAICHATMESSAGE.ZSESSION > ZAICHATSESSION.Z_PK
+Ref: ZAICHATMESSAGE.server_user_id > users.id
+
+// ═══════════════════════════════════════════════════════════════
+// Relationship Summary
+// ═══════════════════════════════════════════════════════════════
+
+// users  1 ── * ZWORKSPACE
+// users  1 ── * ZNOTEBOOK
+// users  1 ── * ZPAGE
+// users  1 ── * ZNOTETEXT
+// users  1 ── * ZNOTEIMAGE
+// users  1 ── * ZAUDIOOBJECT
+// users  1 ── * ZSHAPEOBJECT
+// users  1 ── * ZTABLEOBJECT
+// users  1 ── * ZBROWSEROBJECT
+// users  1 ── * ZAICHATSESSION
+// users  1 ── * ZAICHATMESSAGE
+//
+// ZWORKSPACE  1 ── * ZNOTEBOOK
+// ZNOTEBOOK   1 ── * ZPAGE
+// ZPAGE       1 ── * ZNOTETEXT
+// ZPAGE       1 ── * ZNOTEIMAGE
+// ZPAGE       1 ── * ZAUDIOOBJECT
+// ZPAGE       1 ── * ZSHAPEOBJECT
+// ZPAGE       1 ── * ZTABLEOBJECT
+// ZPAGE       1 ── * ZBROWSEROBJECT
+// ZAICHATSESSION  1 ── * ZAICHATMESSAGE
