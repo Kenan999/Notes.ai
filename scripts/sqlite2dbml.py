@@ -121,33 +121,32 @@ def generate_dbml(db_path: str, output_path: str | None = None) -> str:
     tables = get_tables(conn)
 
     lines = []
-    lines.append("// ═══════════════════════════════════════════════════════════════")
-    lines.append("// Notes.ai — Database Schema (auto-generated)")
-    lines.append(f"// Source: {os.path.basename(db_path)}")
-    lines.append(f"// Generated: {sqlite3.connect(db_path).execute('SELECT datetime()').fetchone()[0]}")
-    lines.append("// ═══════════════════════════════════════════════════════════════")
+    lines.append(f"// Notes.ai Schema (auto-generated from {os.path.basename(db_path)})")
     lines.append("")
 
     for t in tables:
         cols = get_columns(conn, t)
-        lines.append(f"Table {t} {{")
+        lines.append(f"Table \"{t}\" {{")
         for c in cols:
-            parts = [c["name"], c["type"]]
+            settings = []
             if c["pk"]:
-                parts.append("[pk]")
-            elif c["notnull"]:
-                parts.append("[not null]")
-            if c["default"] is not None:
-                parts.append(f"[default: `{c['default']}`]")
+                settings.append("pk")
+            if c["notnull"] and not c["pk"]:
+                settings.append("not null")
             if t == "users" and c["name"] == "email":
-                parts.append("[unique]")
-            lines.append("  " + " ".join(parts))
+                settings.append("unique")
+            if c["default"] is not None:
+                settings.append(f"default: {c['default']}")
+            field = f'  "{c["name"]}" {c["type"]}'
+            if settings:
+                field += f' [{", ".join(settings)}]'
+            lines.append(field)
         lines.append("}")
         lines.append("")
 
         # Indexes for this table
         for idx in get_indexes(conn, t):
-            col_str = ", ".join(idx["columns"])
+            col_str = ", ".join(f'"{c}"' for c in idx["columns"])
             unique = "unique " if idx["unique"] else ""
             lines.append(f"  Index: ({col_str}) [{unique}index]")
         if get_indexes(conn, t):
@@ -168,33 +167,15 @@ def generate_dbml(db_path: str, output_path: str | None = None) -> str:
 
     for child, col, parent, parent_col in child_parent_map:
         if child in tables and parent in tables:
-            lines.append(f"Ref: {child}.{col} > {parent}.{parent_col}")
+            lines.append(f"Ref: \"{child}\".\"{col}\" > \"{parent}\".\"{parent_col}\"")
 
     # Multi-tenant server_user_id references
     for t in tables:
         if t != "users":
             cols = [c["name"] for c in get_columns(conn, t)]
             if "server_user_id" in cols:
-                lines.append(f"Ref: {t}.server_user_id > users.id")
+                lines.append(f"Ref: \"{t}\".\"server_user_id\" > \"users\".\"id\"")
 
-    lines.append("")
-    lines.append("// ═══════════════════════════════════════════════════════════════")
-    lines.append("// Relationships")
-    lines.append("// ═══════════════════════════════════════════════════════════════")
-    lines.append("")
-    lines.append("// Workspace → Notebook → Page hierarchy")
-    lines.append("//   ZWORKSPACE  1 ── * ZNOTEBOOK")
-    lines.append("//   ZNOTEBOOK   1 ── * ZPAGE")
-    lines.append("//")
-    lines.append("// Page canvas objects")
-    lines.append("//   ZPAGE  1 ── * ZNOTETEXT, ZNOTEIMAGE, ZAUDIOOBJECT,")
-    lines.append("//                   ZSHAPEOBJECT, ZTABLEOBJECT, ZBROWSEROBJECT")
-    lines.append("//")
-    lines.append("// AI Chat")
-    lines.append("//   ZAICHATSESSION  1 ── * ZAICHATMESSAGE")
-    lines.append("//")
-    lines.append("// Multi-tenant (all data tables)")
-    lines.append("//   users  1 ── * (every content table via server_user_id)")
     lines.append("")
 
     conn.close()
