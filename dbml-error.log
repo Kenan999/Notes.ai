@@ -1,0 +1,22 @@
+2026-05-26T10:48:53.933Z
+
+    db.dbml(35,17): These fields must be some inline settings optionally ended with a setting list
+    db.dbml(35,28): These fields must be some inline settings optionally ended with a setting list
+
+2026-05-26T10:49:17.538Z
+
+    You have a syntax error at "kali_dump.sql" line 1 column 0. mismatched input 'PRAGMA' expecting <EOF>
+
+2026-05-26T10:49:54.103Z
+
+    You have a syntax error at "kali_clean.sql" line 2 column 35. mismatched input 'AUTOINCREMENT' expecting ')'
+
+2026-05-26T10:52:19.030Z
+
+    db.dbml(35,17): These fields must be some inline settings optionally ended with a setting list
+    db.dbml(35,28): These fields must be some inline settings optionally ended with a setting list
+
+2026-05-26T10:52:35.512Z
+
+    You have a syntax error at "db.dbml" line 1 column 0. mismatched input '//' expecting <EOF>
+

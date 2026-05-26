@@ -7,7 +7,7 @@ and utility scripts for database management.
 
 
 class FlaskAPI:
-    """Read-only REST API server (port 8005).
+    """Read-only REST API server.
 
     Responsibilities:
         - Serve read-only GET endpoints over note hierarchy data.
@@ -33,7 +33,7 @@ class FlaskAPI:
 
 
 class RelayServer:
-    """Sync relay and authentication server (port 8008).
+    """Sync relay and authentication server.
 
     Responsibilities:
         - Receive iPad SQLite snapshot uploads via POST.

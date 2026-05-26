@@ -334,6 +334,6 @@ C4Container
   }
 
   System_Ext(ai_providers, "AI Providers", "OpenAI, Anthropic, ...")
-  System_Ext(relay, "Relay Server", "Backend port 8008")
+  System_Ext(relay, "Relay Server", "Backend")
 ```
 
