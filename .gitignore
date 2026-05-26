@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+dbml-error.log
+*.db
+*.sqlite
+*.store
+.env
+.DS_Store

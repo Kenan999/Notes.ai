@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════
-// Notes.ai — Database Schema (auto-generated from kali_notes.db)
-// Database: SQLite
-// Tables: 12
+// Notes.ai — Database Schema (auto-generated)
+// Source: kali_notes.db
+// Generated: 2026-05-26 10:20:55
 // ═══════════════════════════════════════════════════════════════
 
 Table ZAICHATMESSAGE {
@@ -189,9 +189,9 @@ Table ZWORKSPACE {
 
 Table users {
   id INTEGER [pk]
-  email TEXT [not null] [unique]
+  email VARCHAR [not null] [unique]
   created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
-  password TEXT
+  password VARCHAR
 }
 
 Ref: ZNOTEBOOK.ZWORKSPACE > ZWORKSPACE.Z_PK
@@ -216,16 +216,19 @@ Ref: ZTABLEOBJECT.server_user_id > users.id
 Ref: ZWORKSPACE.server_user_id > users.id
 
 // ═══════════════════════════════════════════════════════════════
-// Relationship Summary
+// Relationships
 // ═══════════════════════════════════════════════════════════════
 
-// Workspace > Notebook > Page hierarchy
+// Workspace → Notebook → Page hierarchy
 //   ZWORKSPACE  1 ── * ZNOTEBOOK
 //   ZNOTEBOOK   1 ── * ZPAGE
-//   ZPAGE       1 ── * ZNOTETEXT, ZNOTEIMAGE, ZAUDIOOBJECT, ZSHAPEOBJECT, ZTABLEOBJECT, ZBROWSEROBJECT
+//
+// Page canvas objects
+//   ZPAGE  1 ── * ZNOTETEXT, ZNOTEIMAGE, ZAUDIOOBJECT,
+//                   ZSHAPEOBJECT, ZTABLEOBJECT, ZBROWSEROBJECT
 //
 // AI Chat
 //   ZAICHATSESSION  1 ── * ZAICHATMESSAGE
 //
-// Multi-tenant isolation (all data tables)
+// Multi-tenant (all data tables)
 //   users  1 ── * (every content table via server_user_id)
