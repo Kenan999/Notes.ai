@@ -219,11 +219,11 @@ jobs:
             echo "⚠️  Skipping — secrets not configured"
             exit 0
           fi
-          DBML=$(cat db.dbml | jq -Rs .)
+          JSON=$(cat db.dbml | jq -Rs '{name: "Notes.ai Schema", content: .}')
           curl -s -X PUT "https://api.dbdiagram.io/v1/diagrams/${DBDIAGRAM_DIAGRAM_ID}" \
-            -H "Authorization: Bearer ${DBDIAGRAM_API_TOKEN}" \
+            -H "dbdiagram-access-token: ${DBDIAGRAM_API_TOKEN}" \
             -H "Content-Type: application/json" \
-            -d "{\"content\": ${DBML}}"
+            -d "${JSON}"
 ```
 
 ### GitHub Actions — Schema validation only
