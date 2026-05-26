@@ -61,7 +61,7 @@ platform with offline-first iOS at the center:
 │            └───────────┬───────────────┘                   │
 │                        ▼                                   │
 │              ┌──────────────────┐                          │
-│              │   SQLite (kali_notes.db) — 12 tables        │
+│              │   SQLite (Notes_ai.db) — 12 tables        │
 │              └──────────────────┘                          │
 └──────────────┼─────────────────────────────────────────────┘
                │
@@ -94,7 +94,7 @@ class DeploymentBoundaries:
             "deployment": "Python scripts on private server",
             "language": "Python 3.x",
             "servers": ["Flask API", "Relay Server"],
-            "database": "SQLite (kali_notes.db) — 12 tables",
+            "database": "SQLite (Notes_ai.db) — 12 tables",
             "protocols": ["HTTP REST", "SQLite direct access"],
         },
         "frontend": {

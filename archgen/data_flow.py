@@ -7,7 +7,7 @@ moves, transforms, and is persisted at each step.
 
 
 class SyncCycleFlow:
-    """iPad snapshot upload → RelayServer merge → kali_notes.db.
+    """iPad snapshot upload → RelayServer merge → Notes_ai.db.
 
     This is the primary write path — all data originates on the iPad.
 
@@ -23,11 +23,11 @@ class SyncCycleFlow:
            to merge WAL + SHM into the main .sqlite file.
         6. merge_snapshot_into_main_db() is called with user_id and snapshot path:
            a. For each non-internal table (ZWORKSPACE, ZNOTEBOOK, ZPAGE, etc.):
-              - CREATE TABLE IF NOT EXISTS in kali_notes.db
+              - CREATE TABLE IF NOT EXISTS in Notes_ai.db
               - DELETE existing rows WHERE server_user_id = user_id
               - INSERT all rows with server_user_id tag
         7. Snapshot file is deleted after successful merge.
-        8. kali_notes.db now reflects the latest iPad state.
+        8. Notes_ai.db now reflects the latest iPad state.
     """
 
 
@@ -48,7 +48,7 @@ class AuthFlow:
 
     Steps:
         1. Client sends POST /api/auth/login with email and password.
-        2. RelayServer queries the users table in kali_notes.db.
+        2. RelayServer queries the users table in Notes_ai.db.
         3. If email + password match, returns {success: true, user: {...}}.
         4. Client stores the user session and navigates to the main app.
         5. On signup: POST /api/auth/signup creates a new user record.
@@ -123,7 +123,7 @@ DATA_FLOW_DIAGRAM = """
 │             └──────────┬─────────────────────┘                       │
 │                        ▼                                             │
 │              ┌─────────────────────┐                                 │
-│              │  kali_notes.db       │                                 │
+│              │  Notes_ai.db       │                                 │
 │              │  12 tables           │                                 │
 │              │  server_user_id tags │                                 │
 │              └─────────────────────┘                                 │
