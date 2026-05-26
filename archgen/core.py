@@ -91,7 +91,7 @@ class DeploymentBoundaries:
             "auth": "Email/password (custom), biometric (FaceID/TouchID)",
         },
         "backend": {
-            "deployment": "Python scripts on home server / Tailscale mesh",
+            "deployment": "Python scripts on private server",
             "language": "Python 3.x",
             "servers": ["Flask API (port 8005)", "Relay Server (port 8008)"],
             "database": "SQLite (kali_notes.db) — 12 tables",
