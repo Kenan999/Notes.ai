@@ -57,7 +57,7 @@ export DBDIAGRAM_DIAGRAM_ID="your-diagram-id"
 Developer changes schema
         │
         ▼
-SQLite database updated (kali_notes.db)
+SQLite database updated (Notes_ai.db)
         │
         ├── (manual) npm run dbml:generate
         │         or
@@ -99,7 +99,7 @@ dbdiagram.io visual ERD updated  ← always up to date
 npm run dbml:generate
 
 # Using Python directly
-python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml
+python3 scripts/sqlite2dbml.py backend/db/Notes_ai.db -o db.dbml
 ```
 
 ### Push to dbdiagram.io (manual one-shot)
@@ -116,7 +116,7 @@ Requires environment variables `DBDIAGRAM_API_TOKEN` and `DBDIAGRAM_DIAGRAM_ID`.
 npm run dbml:pull
 ```
 
-Fetches `kali_notes.db` from `kali0/backend`.
+Place `Notes_ai.db` in `backend/db/` to enable DBML generation.
 
 ### Validate database connectivity
 
@@ -134,7 +134,7 @@ npm run dbml:watch
 
 ## Git Hook (Automatic)
 
-The pre-commit hook at `.githooks/pre-commit` automatically regenerates `db.dbml` whenever `kali_notes.db` is staged for commit.
+The pre-commit hook at `.githooks/pre-commit` automatically regenerates `db.dbml` whenever `Notes_ai.db` is staged for commit.
 
 **Install the hook:**
 
@@ -143,7 +143,7 @@ git config core.hooksPath .githooks
 ```
 
 **How it works:**
-1. Detects if `backend/db/kali_notes.db` is in the staged files
+1. Detects if `backend/db/Notes_ai.db` is in the staged files
 2. Runs `sqlite2dbml.py` to regenerate `db.dbml`
 3. Stages the updated `db.dbml`
 4. Commit proceeds as normal
@@ -180,7 +180,7 @@ If you don't have a paid dbdiagram.io plan, you can still sync manually:
 
 ```dbml
 // Notes.ai — Database Schema (auto-generated)
-// Source: kali_notes.db
+// Source: Notes_ai.db
 // Generated: 2026-05-26 ...
 ```
 
@@ -199,7 +199,7 @@ on:
     paths:
       - "db.dbml"
       - "scripts/sqlite2dbml.py"
-      - "backend/db/kali_notes.db"
+      - "backend/db/Notes_ai.db"
   workflow_dispatch:
 
 jobs:
@@ -234,7 +234,7 @@ name: Schema Check
 on:
   push:
     paths:
-      - "backend/db/kali_notes.db"
+      - "backend/db/Notes_ai.db"
 jobs:
   generate-dbml:
     runs-on: ubuntu-latest
@@ -244,7 +244,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Regenerate db.dbml
-        run: python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml
+        run: python3 scripts/sqlite2dbml.py backend/db/Notes_ai.db -o db.dbml
       - name: Check for diff
         run: |
           if ! git diff --exit-code db.dbml; then
@@ -258,7 +258,7 @@ jobs:
 ```yaml
 schema-check:
   script:
-    - python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml
+    - python3 scripts/sqlite2dbml.py backend/db/Notes_ai.db -o db.dbml
     - diff db.dbml db.dbml || (echo "Out of sync!" && exit 1)
 ```
 

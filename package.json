@@ -4,12 +4,12 @@
   "private": true,
   "description": "Notes.ai — Database schema synchronization workflow",
   "scripts": {
-    "dbml:generate": "python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml",
+    "dbml:generate": "python3 scripts/sqlite2dbml.py backend/db/Notes_ai.db -o db.dbml",
     "dbml:generate:custom": "python3 scripts/sqlite2dbml.py",
-    "dbml:validate": "python3 -c \"import sqlite3; conn=sqlite3.connect('backend/db/kali_notes.db'); tables=[r[0] for r in conn.execute(\\\"SELECT name FROM sqlite_master WHERE type='table'\\\").fetchall()]; print(f'Connected: {len(tables)} tables found')\"",
-    "dbml:watch": "fswatch -o backend/db/kali_notes.db | xargs -n1 -I{} python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml",
-    "dbml:pull": "git fetch kali0 backend && git show kali0/backend:backend/db/kali_notes.db > backend/db/kali_notes.db && echo '✅ Pulled from kali0/backend'",
-    "dbml:push": "python3 scripts/sqlite2dbml.py backend/db/kali_notes.db -o db.dbml && cat db.dbml | jq -Rs '{name: \"Notes.ai Schema\", content: .}' | curl -s -X PUT \"https://api.dbdiagram.io/v1/diagrams/${DBDIAGRAM_DIAGRAM_ID:?Set env DBDIAGRAM_DIAGRAM_ID}\" -H \"dbdiagram-access-token: ${DBDIAGRAM_API_TOKEN:?Set env DBDIAGRAM_API_TOKEN}\" -H \"Content-Type: application/json\" -d @- | jq ."
+    "dbml:validate": "python3 -c \"import sqlite3; conn=sqlite3.connect('backend/db/Notes_ai.db'); tables=[r[0] for r in conn.execute(\\\"SELECT name FROM sqlite_master WHERE type='table'\\\").fetchall()]; print(f'Connected: {len(tables)} tables found')\"",
+    "dbml:watch": "fswatch -o backend/db/Notes_ai.db | xargs -n1 -I{} python3 scripts/sqlite2dbml.py backend/db/Notes_ai.db -o db.dbml",
+    "dbml:pull": "echo '⚠️ Place Notes_ai.db in backend/db/ to enable DBML generation'",
+    "dbml:push": "python3 scripts/sqlite2dbml.py backend/db/Notes_ai.db -o db.dbml && cat db.dbml | jq -Rs '{name: \"Notes.ai Schema\", content: .}' | curl -s -X PUT \"https://api.dbdiagram.io/v1/diagrams/${DBDIAGRAM_DIAGRAM_ID:?Set env DBDIAGRAM_DIAGRAM_ID}\" -H \"dbdiagram-access-token: ${DBDIAGRAM_API_TOKEN:?Set env DBDIAGRAM_API_TOKEN}\" -H \"Content-Type: application/json\" -d @- | jq ."
   },
   "devDependencies": {
     "@dbml/cli": "^8.2.1",
