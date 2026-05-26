@@ -182,11 +182,8 @@ def deployment_diagram() -> str:
 ```mermaid
 graph TB
   subgraph "Home Network"
-    subgraph "Tailscale Mesh (100.69.224.83)"
+    subgraph "Server Network"
       FS1["Backend Server<br/>FlaskAPI :8005<br/>RelayServer :8008<br/>kali_notes.db"]
-    end
-    subgraph "Home LAN (192.168.0.131)"
-      FS1
     end
   end
 
