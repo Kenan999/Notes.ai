@@ -150,7 +150,7 @@ class SyncManager:
     Responsibilities:
         - Monitor SwiftData store for changes with file watcher.
         - Export live store to snapshot files (.store + .wal + .shm).
-        - Probe server connectivity (home IP + Tailscale IP).
+        - Probe server connectivity.
         - Upload snapshot triple to RelayServer with retry and backoff.
         - Download cloud snapshots for restore.
         - Clean up old snapshot files from sandbox.
