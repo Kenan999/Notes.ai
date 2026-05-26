@@ -18,10 +18,6 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Regenerate db.dbml
-        run: python3 scripts/sqlite2dbml.py db.dbml -o /dev/null  # validate only
-        continue-on-error: true
-
       - name: Push to dbdiagram.io
         env:
           DBDIAGRAM_API_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
@@ -31,9 +27,8 @@ jobs:
             echo "⚠️  Skipping — DBDIAGRAM_API_TOKEN or DBDIAGRAM_DIAGRAM_ID not set"
             exit 0
           fi
-          DBML=$(cat db.dbml | jq -Rs .)
+          JSON=$(cat db.dbml | jq -Rs '{name: "Notes.ai Schema", content: .}')
           curl -s -X PUT "https://api.dbdiagram.io/v1/diagrams/${DBDIAGRAM_DIAGRAM_ID}" \
-            -H "Authorization: Bearer ${DBDIAGRAM_API_TOKEN}" \
+            -H "dbdiagram-access-token: ${DBDIAGRAM_API_TOKEN}" \
             -H "Content-Type: application/json" \
-            -d "{\"content\": ${DBML}}" \
-            | jq .
+            -d "${JSON}" | jq .
