@@ -83,7 +83,6 @@ C4Container
     Container(relay, "Relay Server", "Python / http.server", "Sync & auth")
     ContainerDb(snapshot, "Snapshot Store", "SQLite", "iPad snapshot (.store)")
     ContainerDb(main_db, "Main Database", "SQLite", "Notes_ai.db — 12 tables")
-    Container(scripts, "DB Scripts", "Python", "init, add_user, migrate")
 
     Rel(flask, snapshot, "→", "Read-only (:mode=ro)")
     Rel(relay, main_db, "→", "Read/write merge + auth")

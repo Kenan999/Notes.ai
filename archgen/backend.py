@@ -100,11 +100,6 @@ class DatabaseScripts:
         - Add or update user accounts via command line.
         - Apply schema migrations to the database.
 
-    Scripts:
-        - init_users_db.py: init_db() — CREATE TABLE IF NOT EXISTS users, seed demo user
-        - add_user.py: add_user(email, password) — INSERT or UPDATE user password
-        - migrate_db.py: migrate() — ALTER TABLE to add columns
-
     Interactions:
         - Operate directly on Notes_ai.db.
         - Called manually or during setup.
