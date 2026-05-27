@@ -191,10 +191,6 @@ python3 backend/app.py
 
 # Start Relay Server
 python3 backend/relay.py
-
-# Database utilities
-python3 backend/db/init_users_db.py
-python3 backend/db/add_user.py <email> <password>
 ```
 
 ---
