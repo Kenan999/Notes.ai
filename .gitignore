@@ -8,3 +8,17 @@ dbml-error.log
 .env
 .DS_Store
 node_modules/
+
+# Security: never track private databases, secrets, or dependencies
+*.sqlite3
+*.sqlite-*
+*.db-wal
+*.db-shm
+.env.*
+!.env.example
+*.pem
+*.p8
+*.p12
+*.pfx
+*.key
+*.mobileprovision
