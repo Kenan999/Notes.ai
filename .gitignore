@@ -1,2 +1,23 @@
 __pycache__/
 *.pyc
+
+# Security: never track private databases, secrets, or dependencies
+*.db
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.store
+*.db-wal
+*.db-shm
+.env
+.env.*
+!.env.example
+*.pem
+*.p8
+*.p12
+*.pfx
+*.key
+*.mobileprovision
+node_modules/
+dbml-error.log
+.DS_Store
